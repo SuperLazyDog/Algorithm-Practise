@@ -3,6 +3,7 @@ struct stack *createStack() { // 创建stack
   struct stack *temp = (struct stack *)malloc(sizeof(struct stack));
   temp->count = 0;
   temp->head = NULL; //以 NULL 为终止符
+  return temp;
 }
 
 void push(struct stack *stack, int data) { // push数据
@@ -34,7 +35,7 @@ int top(struct stack *stack) { // 查看第一个元素
 }
 
 int isEmptyStack(struct stack *stack) { // 检验是否为空
-  stack->count == 0;
+  return stack->count == 0;
 }
 
 

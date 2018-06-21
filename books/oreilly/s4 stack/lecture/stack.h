@@ -8,12 +8,12 @@
 struct listNode {
   int data;
   struct listNode *next;
-}
+};
 
 struct stack {
   int count;
-  struct listnode *head;
-}
+  struct listNode *head;
+};
 
 struct stack *createStack(void); // 创建stack 0(1)
 void push(struct stack *stack, int data); // push数据 O(1)
