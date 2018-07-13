@@ -48,6 +48,6 @@ int checkSymbol(char *str) {
         break;
     }
     str++;
-    return 1;
   }
+  return 1;
 }
