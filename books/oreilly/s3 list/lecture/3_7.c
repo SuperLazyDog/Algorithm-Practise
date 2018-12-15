@@ -12,20 +12,20 @@ struct doubleNode *newDoubleNode(int data);
 void deleteDoubleList(struct doubleNode **head);
 void insert(struct doubleNode **head, int data, int position);
 void delete(struct doubleNode **head, int position);
-void showNode(struct doubleNode *head);
+void showNodes(struct doubleNode *head);
 
 int main(int argc, char const *argv[]) {
   struct doubleNode *node = newDoubleNode(100);
   for (size_t i = 0; i < 9; i++) {
     insert(&node, i, 100);
   }
-  showNode(node);
+  showNodes(node);
   puts("");
   delete(&node, 100);
   delete(&node, 9);
   delete(&node, 0);
   delete(&node, 4);
-  showNode(node);
+  showNodes(node);
   deleteDoubleList(&node);
   return 0;
 }
@@ -99,7 +99,7 @@ void delete(struct doubleNode **head, int position) {
   }
 }
 
-void showNode(struct doubleNode *head) {
+void showNodes(struct doubleNode *head) {
   struct doubleNode *temp = head;
   int i=0;
   while (temp) {
