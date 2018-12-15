@@ -14,25 +14,34 @@ void deleteElement(ListNode **head, int position);
 ListNode *createList(int data);
 void deleteList(ListNode **p);
 
+ListNode *getCircleStartPoint(ListNode *head, ListNode *fast) {
+  ListNode *slow = head, *temp = fast;
+  while (temp != slow) {
+    slow = slow->next;
+    temp = temp->next;
+  }
+  return slow;
+}
+
 int getListType(ListNode *head) {
   // 0: 线性  1: 循环
-  ListNode *current, *temp;
-  int currentCount, tempCount;
-  currentCount = tempCount = 0;
-  current = temp = head;
-  while (current) {
-    current = current->next;
-    currentCount++;
-    // 确认新节点是否与现有节点中的某个一致
-    temp = head;
-    tempCount = 0;
-    while (temp != current) {
-      temp = temp->next;
-      tempCount++;
-    }
-    if (tempCount < currentCount) {
+  ListNode *slow, *fast;
+  slow = fast = head;
+  while (slow && fast) {
+    fast = fast->next;
+    if (fast == slow) {
+      printf("%d\n", getCircleStartPoint(head, fast)->data);
       return 1;
     }
+    if (!fast) {
+      return 0;
+    }
+    fast = fast->next;
+    if (fast == slow) {
+      printf("%d\n", getCircleStartPoint(head, fast)->data);
+      return 1;
+    }
+    slow = slow->next;
   }
   return 0;
 }
