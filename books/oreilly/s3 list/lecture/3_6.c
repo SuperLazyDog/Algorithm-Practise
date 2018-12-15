@@ -69,9 +69,11 @@ void addElement(ListNode **head, int data, int position) {
 }
 
 void deleteElement(ListNode **head, int position) {
-  // TODO: 对照书上代码
   ListNode *temp = *head, *temp2 = *head;
   int i = 0;
+  if (!*head) { // 链表没有元素
+    return;
+  }
   if (position == 0) {
     *head = (*head)->next;
     free(temp);
@@ -97,10 +99,10 @@ ListNode *createList(int data) {
 
 void deleteList(ListNode **p) {
   ListNode *temp = *p, *temp2;
-  if (temp) {
+  while (temp) {
     temp2 = temp->next;
     free(temp);
     temp = temp2;
   }
-  p = NULL;
+  *p = NULL;
 }
