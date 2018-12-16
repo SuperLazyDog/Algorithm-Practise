@@ -23,6 +23,31 @@ ListNode *getCircleStartPoint(ListNode *head, ListNode *fast) {
   return slow;
 }
 
+int roopLength(ListNode *head) {
+  ListNode *slow, *fast;
+  int fCount, sCount;
+  fCount = sCount = 0;
+  slow = fast = head;
+  while (fast) {
+    fast = fast->next;
+    fCount++;
+    if (!fast) {
+      return 0;
+    }
+    if (fast == slow) {
+      return fCount - sCount;
+    }
+    fast = fast->next;
+    fCount++;
+    if (fast == slow) {
+      return fCount - sCount;
+    }
+    slow = slow->next;
+    sCount++;
+  }
+  return 0;
+}
+
 int getListType(ListNode *head) {
   // 0: 线性  1: 循环
   ListNode *slow, *fast;
@@ -30,7 +55,8 @@ int getListType(ListNode *head) {
   while (slow && fast) {
     fast = fast->next;
     if (fast == slow) {
-      printf("%d\n", getCircleStartPoint(head, fast)->data);
+      printf("循环起点: %d\n", getCircleStartPoint(head, fast)->data);
+      printf("循环长度: %d\n", roopLength(head));
       return 1;
     }
     if (!fast) {
@@ -38,7 +64,8 @@ int getListType(ListNode *head) {
     }
     fast = fast->next;
     if (fast == slow) {
-      printf("%d\n", getCircleStartPoint(head, fast)->data);
+      printf("循环起点: %d\n", getCircleStartPoint(head, fast)->data);
+      printf("循环长度: %d\n", roopLength(head));
       return 1;
     }
     slow = slow->next;
@@ -46,16 +73,49 @@ int getListType(ListNode *head) {
   return 0;
 }
 
+void insertInSortedList(ListNode **head, int data) {
+  // 相等的新插入的在前面
+  ListNode *newNode = createList(data), *temp,  *temp2;
+  temp = temp2 = *head;
+  if (!*head || data <= (*head)->data) { // 链表为空或插入在第一个
+    newNode->next = *head;
+    *head = newNode;
+    return;
+  }
+  while (temp && data > temp->data) {
+    temp2 = temp;
+    temp = temp->next;
+  }
+  newNode->next = temp;
+  temp2->next = newNode;
+}
+
+void reverseList(ListNode **head) {
+  ListNode *temp, *temp2;
+  temp2 = NULL;
+  while (*head) {
+    temp = (*head)->next;
+    (*head)->next = temp2;
+    temp2 = *head;
+    (*head) = temp;
+  }
+  *head = temp2;
+}
+
 int main(int argc, char const *argv[]) {
   ListNode *p = createList(0);
-  for (int i = 1; i < 10; i++) {
-    addElement(&p, i, 5);
+  for (int i = 1; i < 20; i++) {
+    // addElement(&p, i, 5);
+    insertInSortedList(&p, rand()%100);
   }
   listLength(p);
   puts("");puts("");
-  printf("%s\n", getListType(p) == 0 ? "线性":"循环");
-  p->next->next->next = p->next->next;
-  printf("%s\n", getListType(p) == 0 ? "线性":"循环");
+  reverseList(&p);
+  listLength(p);
+  // puts("");puts("");
+  // printf("%s\n", getListType(p) == 0 ? "线性":"循环");
+  // p->next->next = p->next;
+  // printf("%s\n", getListType(p) == 0 ? "线性":"循环");
   // deleteList(&p);
   return 0;
 }

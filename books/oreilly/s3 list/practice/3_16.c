@@ -1,4 +1,4 @@
-// 确认带循环的链表的循环起点
+// 将单向链表倒置
 // struct listNode {
 //   int data;
 //   struct listNode *next;
@@ -10,11 +10,15 @@
 // ListNode *createList(int data);
 // void deleteList(ListNode **p);
 
-ListNode *getCircleStartPoint(ListNode *head, ListNode *fast) {
-  ListNode *slow = head, *temp = fast;
-  while (temp != slow) {
-    slow = slow->next;
-    temp = temp->next;
+// TODO p69 理解递归版
+void reverseList(ListNode **head) {
+  ListNode *temp, *temp2;
+  temp2 = NULL;
+  while (*head) {
+    temp = (*head)->next;
+    (*head)->next = temp2;
+    temp2 = *head;
+    (*head) = temp;
   }
-  return slow;
+  *head = temp2;
 }
