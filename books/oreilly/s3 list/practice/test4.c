@@ -1,4 +1,5 @@
 // 单向链表
+// 32~题用
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -14,12 +15,48 @@ void deleteElement(ListNode **head, int position);
 ListNode *createList(int data);
 void deleteList(ListNode **p);
 
+// void swapListEle(ListNode **head) {
+//   ListNode *a = *head, *b, *c, *d = NULL;
+//   while (a && a->next) {
+//     b = a;
+//     c = a->next;
+//     a = c->next;
+//     b->next = c->next;
+//     c->next = b;
+//     if (d) {
+//       d->next = c;
+//     } else {
+//       *head = c;
+//     }
+//     d = b;
+//   }
+// }
+void swapListEle(ListNode **head, ListNode *before) {
+  ListNode *a = *head, *b, *c;
+  if (!a || !(a->next)) {
+    return;
+  }
+  b = a;
+  c = b->next;
+  b->next = c->next;
+  c->next = b;
+  if (before) {
+    before->next = c;
+  } else {
+    *head = c;
+  }
+  swapListEle(&b->next, b);
+}
+
 int main(int argc, char const *argv[]) {
-  ListNode *p = createList(0);
-  for (int i = 0; i < 10; i++) {
+  ListNode *p = NULL;
+  for (int i = 0; i < 11; i++) {
     addElement(&p, i, 100);
   }
   listLength(p);
+  swapListEle(&p, NULL);
+  listLength(p);
+  deleteList(&p);
   return 0;
 }
 

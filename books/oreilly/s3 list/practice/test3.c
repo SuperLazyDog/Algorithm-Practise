@@ -1,4 +1,5 @@
 // 单向链表
+// 24~31题用
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -14,12 +15,80 @@ void deleteElement(ListNode **head, int position);
 ListNode *createList(int data);
 void deleteList(ListNode **p);
 
-int main(int argc, char const *argv[]) {
-  ListNode *p = createList(0);
-  for (int i = 0; i < 10; i++) {
-    addElement(&p, i, 100);
+ListNode *getMiddleNode(ListNode *head) {
+  ListNode *slow, *fast;
+  slow = fast = head;
+  while (fast) {
+    fast = fast->next;
+    if (!fast) {
+      return slow;
+    }
+    fast = fast->next;
+    if (!fast) {
+      return slow;
+    } else {
+      slow = slow->next;
+    }
   }
+  return NULL;
+}
+
+void printListFromEnd(ListNode *head) {
+  if (!head) {
+    puts("");puts("");
+    return;
+  } else {
+    printListFromEnd(head->next);
+    printf("data: %d\n", head->data);
+  }
+}
+
+void insertInSortedList(ListNode **head, int data) {
+  // 相等的插入在相等元素前
+  ListNode *newNode = createList(data), *temp = *head, *temp2 = *head;
+  if (!*head || data <= (*head)->data) {
+    newNode->next = *head;
+    *head = newNode;
+    return;
+  }
+  while (temp && data > temp->data) {
+    temp2 = temp;
+    temp = temp->next;
+  }
+  temp2->next = newNode;
+  newNode->next = temp;
+}
+
+ListNode *mergeList(ListNode *a, ListNode *b) {
+  ListNode *result = NULL;
+  if (!a) {
+    return b;
+  }
+  if (!b) {
+    return a;
+  }
+  if (a->data < b->data) {
+    result = a;
+    result->next = mergeList(a->next, b);
+  } else {
+    result = b;
+    result->next = mergeList(b->next, a);
+  }
+  return result;
+}
+
+int main(int argc, char const *argv[]) {
+  ListNode *p = NULL, *q = NULL;
+  for (int i = 0; i < 10; i++) {
+    insertInSortedList(&p, rand()%100);
+    insertInSortedList(&q, rand()%100);
+  }
+  // printf("%d\n", getMiddleNode(p)->data);
   listLength(p);
+  listLength(q);
+  listLength(mergeList(p, q));
+  deleteList(&p);
+  deleteList(&q);
   return 0;
 }
 
