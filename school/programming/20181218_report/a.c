@@ -14,29 +14,23 @@ void showMatrix(Matrix *m);
 // ガウス消去法
 void gaussForward(Matrix *a, Matrix *b);
 void gaussBackward(Matrix *a, Matrix *b);
-void gauss(Matrix *a, Matrix *b);
+void guasPro(Matrix *a, Matrix *b);
 // 課題関連
 Matrix *readData(char *fname);
-void setSolutionMatrix(Matrix *data, Matrix *l, Matrix *r);
-void setMatrix(Matrix *m, double **datas, int rows, int columns);
+void setSolutionMatrix(Matrix *data, Matrix **l, Matrix **r);
 
 int main(int argc, char const *argv[]) {
-  Matrix *data = readData("data.txt");
+  Matrix *data = readData("data.txt"), *m, *n;
   showMatrix(data);
-  setSolutionMatrix(data, NULL, NULL);
+  setSolutionMatrix(data, &m, &n);
+  // showMatrix(m);
+  // showMatrix(n);
+  guasPro(m, n);
+  // showMatrix(m);
+  showMatrix(n);
   deleteMatrix(data);
-  // Matrix *m = createMatrix(6, 6), *mm = createMatrix(6, 1);
-  // showMatrix(m);
-  // puts("");
-  // showMatrix(mm);
-  // puts("");puts("");
-  // gaussForward(m, mm);
-  // gaussBackward(m, mm);
-  // showMatrix(m);
-  // puts("");
-  // showMatrix(mm);
-  // deleteMatrix(m);
-  // deleteMatrix(mm);
+  deleteMatrix(m);
+  deleteMatrix(n);
   return 0;
 }
 
@@ -47,7 +41,7 @@ Matrix *createMatrix(int rows, int columns) {
   for (int i = 0; i < m->rows; i++) {
     m->datas[i] = (double *)malloc(sizeof(double)*m->columns);
     for (int j = 0; j < m->columns; j++) {
-      m->datas[i][j] = 1;
+      m->datas[i][j] = 0;
     }
   }
   return m;
@@ -68,12 +62,16 @@ void deleteMatrix(Matrix *m) {
 }
 
 void showMatrix(Matrix *m) {
+  if (!m) {
+    return;
+  }
   for (int i = 0; i < m->rows; i++) {
     for (int j = 0; j < m->columns; j++) {
-      printf("%8.6f\t", m->datas[i][j]);
+      printf("%3.2f\t", m->datas[i][j]);
     }
     puts("");
   }
+  puts("");puts("");
 }
 
 void gaussForward(Matrix *a, Matrix *b) {
@@ -134,7 +132,7 @@ void gaussBackward(Matrix *a, Matrix *b) {
   }
 }
 
-void guass(Matrix *a, Matrix *b) {
+void guasPro(Matrix *a, Matrix *b) {
   gaussForward(a, b);
   gaussBackward(a, b);
 }
@@ -167,28 +165,73 @@ Matrix *readData(char *fname) {
   return m;
 }
 
-void setMatrix(Matrix *m, double **datas, int rows, int columns) {
-  if (!(rows == m->rows && columns == m->columns)) {
-    return;
-  }
-  for(int i = 0; i < m->rows; i++) {
-    for(int j = 0; j < m->columns; j++) {
-      m->datas[i][j] = datas[i][j];
+void setSolutionMatrix(Matrix *datas, Matrix **l, Matrix **r) {
+  Matrix *temp;
+  int dataSize = 0, indexTemp = 0, pIndex, mIndex;
+  for (int i = 0; i < datas->rows; i++) {
+    for (int j = 0; j < datas->columns; j++) {
+      if (datas->datas[i][j]) {
+        dataSize++;
+      }
     }
   }
-}
-
-void setSolutionMatrix(Matrix *datas, Matrix *l, Matrix *r) {
-  int dataSize = 0;
-  printf("rows: %d, columns: %d\n", datas->rows, datas->columns);
-  // for (int i = 0; i < datas->rows; i++) {
-  //   for (int j = 0; i < datas->columns; j++) {
-  //     printf("%f ", datas->datas[i][j]);
-  //     if (datas->datas[i][j]) {
-  //       dataSize++;
-  //     }
-  //   }
-  //   puts("");
-  // }
-  printf("dataSize: %d\n", dataSize);
+  temp = createMatrix(datas->rows, datas->columns);
+  for (int i = 0; i < datas->rows; i++) {
+    for (int j = 0; j < datas->columns; j++) {
+      if (datas->datas[i][j]) {
+        temp->datas[i][j] = indexTemp;
+        if (datas->datas[i][j] == 2) {
+          pIndex = indexTemp;
+        } else if (datas->datas[i][j] == 3) {
+          mIndex = indexTemp;
+        }
+        indexTemp++;
+      } else {
+        temp->datas[i][j] = -1;
+      }
+    }
+  }
+  showMatrix(temp);
+  *l = createMatrix(dataSize, dataSize);
+  *r = createMatrix(dataSize, 1);
+  (*r)->datas[pIndex][0] = 5;
+  (*r)->datas[mIndex][0] = 0;
+  for (int i = 0; i < temp->rows; i++) {
+    for (int j = 0; j < temp->columns; j++) {
+      if (temp->datas[i][j] < 0) {
+        continue;
+      }
+      int turn = temp->datas[i][j];
+      int count = 0;
+      if (turn == pIndex || turn == mIndex) {
+        (*l)->datas[turn][turn] = 1;
+        continue;
+      }
+      if (i <= 0) { // 上下
+        (*l)->datas[turn][(int)temp->datas[i+1][j]] = -1;
+        count++;
+      } else if (i >= temp->rows-1) {
+        (*l)->datas[turn][(int)temp->datas[i-1][j]] = -1;
+        count++;
+      } else {
+        (*l)->datas[turn][(int)temp->datas[i-1][j]] = -1;
+        count++;
+        (*l)->datas[turn][(int)temp->datas[i+1][j]] = -1;
+        count++;
+      }
+      if (j <= 0) { // 左右
+        (*l)->datas[turn][(int)temp->datas[i][j+1]] = -1;
+        count++;
+      } else if (j >= temp->columns-1) {
+        (*l)->datas[turn][(int)temp->datas[i][j-1]] = -1;
+        count++;
+      } else {
+        (*l)->datas[turn][(int)temp->datas[i][j+1]] = -1;
+        count++;
+        (*l)->datas[turn][(int)temp->datas[i][j-1]] = -1;
+        count++;
+      }
+      (*l)->datas[turn][turn] = count;
+    }
+  }
 }
