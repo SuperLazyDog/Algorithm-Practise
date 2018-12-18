@@ -7,6 +7,7 @@ typedef struct matrix {
   int rows, columns;
   double **datas;
 } Matrix;
+
 Matrix *createMatrix(int rows, int columns);
 void deleteMatrix(Matrix *m);
 void showMatrix(Matrix *m);
@@ -16,9 +17,14 @@ void gaussBackward(Matrix *a, Matrix *b);
 void gauss(Matrix *a, Matrix *b);
 // 課題関連
 Matrix *readData(char *fname);
+void setSolutionMatrix(Matrix *data, Matrix *l, Matrix *r);
 void setMatrix(Matrix *m, double **datas, int rows, int columns);
 
 int main(int argc, char const *argv[]) {
+  Matrix *data = readData("data.txt");
+  showMatrix(data);
+  setSolutionMatrix(data, NULL, NULL);
+  deleteMatrix(data);
   // Matrix *m = createMatrix(6, 6), *mm = createMatrix(6, 1);
   // showMatrix(m);
   // puts("");
@@ -31,7 +37,6 @@ int main(int argc, char const *argv[]) {
   // showMatrix(mm);
   // deleteMatrix(m);
   // deleteMatrix(mm);
-  readData("data.txt");
   return 0;
 }
 
@@ -42,7 +47,7 @@ Matrix *createMatrix(int rows, int columns) {
   for (int i = 0; i < m->rows; i++) {
     m->datas[i] = (double *)malloc(sizeof(double)*m->columns);
     for (int j = 0; j < m->columns; j++) {
-      m->datas[i][j] = 0;
+      m->datas[i][j] = 1;
     }
   }
   return m;
@@ -137,6 +142,7 @@ void guass(Matrix *a, Matrix *b) {
 Matrix *readData(char *fname) {
   FILE *fp = fopen(fname, "r");
   Matrix *m;
+  int temp, temp2=0;
   int bi[2];
   char str[128];
   if(fp == NULL) {
@@ -146,14 +152,21 @@ Matrix *readData(char *fname) {
     fgets(str, 128, fp);
     sscanf(str, "%d", &bi[i]);
   }
+  m = createMatrix(bi[0], bi[1]);
   while (fgets(str, 128, fp)) {
-    // TODO: 数据含义等回复
-    printf("str: %s\n", str);
+    temp = 0;
+    for (int i = 0; str[i]; i++) {
+      if (str[i] != ' ') {
+        m->datas[temp2][temp] = atoi(&str[i]);
+        temp++;
+      }
+    }
+    temp2++;
   }
 	fclose(fp);
-  printf("rows: %d, columns: %d\n", bi[0], bi[1]);
-  return NULL;
+  return m;
 }
+
 void setMatrix(Matrix *m, double **datas, int rows, int columns) {
   if (!(rows == m->rows && columns == m->columns)) {
     return;
@@ -163,4 +176,19 @@ void setMatrix(Matrix *m, double **datas, int rows, int columns) {
       m->datas[i][j] = datas[i][j];
     }
   }
+}
+
+void setSolutionMatrix(Matrix *datas, Matrix *l, Matrix *r) {
+  int dataSize = 0;
+  printf("rows: %d, columns: %d\n", datas->rows, datas->columns);
+  // for (int i = 0; i < datas->rows; i++) {
+  //   for (int j = 0; i < datas->columns; j++) {
+  //     printf("%f ", datas->datas[i][j]);
+  //     if (datas->datas[i][j]) {
+  //       dataSize++;
+  //     }
+  //   }
+  //   puts("");
+  // }
+  printf("dataSize: %d\n", dataSize);
 }
