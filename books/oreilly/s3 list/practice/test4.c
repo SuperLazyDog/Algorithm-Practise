@@ -1,5 +1,5 @@
 // 单向链表
-// 32~题用
+// 32, 37~题用
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -48,14 +48,61 @@ void swapListEle(ListNode **head, ListNode *before) {
   swapListEle(&b->next, b);
 }
 
+int isPalindrome(ListNode *head) {
+  ListNode *slow, *fast, *rStart, *rNext = NULL, *temp;
+  int result = 1;
+  slow = fast = head;
+  if (!head) {
+    result = 0;
+    return result;
+  }
+  while (fast->next && fast->next->next) {
+    fast = fast->next->next;
+    slow = slow->next;
+  }
+  if (fast->next && !fast->next->next) { // 偶数个
+    fast = fast->next;
+  }
+  rStart = slow->next;
+  while (rStart) {
+    temp = rStart->next;
+    rStart->next = rNext;
+    rNext = rStart;
+    rStart = temp;
+  }
+  rStart = rNext;
+  temp = head;
+  while (rStart) {
+    if (temp->data != rStart->data) {
+      result = 0;
+      break;
+    }
+    temp = temp->next;
+    rStart = rStart->next;
+  }
+  // 右半边复原
+  rStart = rNext;
+  rNext = NULL;
+  while (rStart) {
+    temp = rStart->next;
+    rStart->next = rNext;
+    rNext = rStart;
+    rStart = temp;
+  }
+  slow->next = rNext;
+  return result;
+}
+
 int main(int argc, char const *argv[]) {
   ListNode *p = NULL;
+  int data[] = {1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1};
   for (int i = 0; i < 11; i++) {
-    addElement(&p, i, 100);
+    addElement(&p, data[i], 100);
   }
   listLength(p);
-  swapListEle(&p, NULL);
-  listLength(p);
+  printf("palindrome: %d\n", isPalindrome(p));
+  // swapListEle(&p, NULL);
+  // listLength(p);
   deleteList(&p);
   return 0;
 }
