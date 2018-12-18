@@ -36,47 +36,20 @@ void splitList(CircleNode *head, CircleNode **l, CircleNode **r) {
 }
 
 // TODO: p76 floyd法
-int isPalindrome(ListNode *head) {
-  ListNode *slow, *fast, *rStart, *rNext = NULL, *temp;
-  int result = 1;
+void splitList(CircleNode *head, CircleNode **r) {
+  CircleNode *slow, *fast; // fast应为最后一个, slow为前一半最后一个
   slow = fast = head;
   if (!head) {
-    result = 0;
-    return result;
+    return;
   }
-  while (fast->next && fast->next->next) {
+  while (fast->next != head && fast->next->next != head) {
     fast = fast->next->next;
     slow = slow->next;
   }
-  if (fast->next && !fast->next->next) { // 偶数个
+  if (fast->next->next == head) { // 有偶数个
     fast = fast->next;
   }
-  rStart = slow->next;
-  while (rStart) {
-    temp = rStart->next;
-    rStart->next = rNext;
-    rNext = rStart;
-    rStart = temp;
-  }
-  rStart = rNext;
-  temp = head;
-  while (rStart) {
-    if (temp->data != rStart->data) {
-      result = 0;
-      break;
-    }
-    temp = temp->next;
-    rStart = rStart->next;
-  }
-  // 右半边复原
-  rStart = rNext;
-  rNext = NULL;
-  while (rStart) {
-    temp = rStart->next;
-    rStart->next = rNext;
-    rNext = rStart;
-    rStart = temp;
-  }
-  slow->next = rNext;
-  return result;
+  *r = slow->next;
+  slow->next = head;
+  fast->next = *r;
 }

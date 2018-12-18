@@ -12,15 +12,17 @@
 
 int isPalindrome(ListNode *head) {
   ListNode *slow, *fast, *rStart, *rNext = NULL, *temp;
+  int result = 1;
   slow = fast = head;
   if (!head) {
-    return;
+    result = 0;
+    return result;
   }
   while (fast->next && fast->next->next) {
     fast = fast->next->next;
     slow = slow->next;
   }
-  if (!fast->next->next) { // 偶数个
+  if (fast->next && !fast->next->next) { // 偶数个
     fast = fast->next;
   }
   rStart = slow->next;
@@ -30,11 +32,25 @@ int isPalindrome(ListNode *head) {
     rNext = rStart;
     rStart = temp;
   }
+  rStart = rNext;
   temp = head;
   while (rStart) {
     if (temp->data != rStart->data) {
-      return 0;
+      result = 0;
+      break;
     }
+    temp = temp->next;
+    rStart = rStart->next;
   }
-  return 1;
+  // 右半边复原
+  rStart = rNext;
+  rNext = NULL;
+  while (rStart) {
+    temp = rStart->next;
+    rStart->next = rNext;
+    rNext = rStart;
+    rStart = temp;
+  }
+  slow->next = rNext;
+  return result;
 }
