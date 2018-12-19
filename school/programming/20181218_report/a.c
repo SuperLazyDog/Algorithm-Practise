@@ -14,18 +14,18 @@ void showMatrix(Matrix *m);
 // ガウス消去法
 void gaussForward(Matrix *a, Matrix *b);
 void gaussBackward(Matrix *a, Matrix *b);
-void guasPro(Matrix *a, Matrix *b);
+void guassPro(Matrix *a, Matrix *b);
 // 課題関連
 Matrix *readData(char *fname);
 void setSolutionMatrix(Matrix *data, Matrix **l, Matrix **r);
 
 int main(int argc, char const *argv[]) {
-  Matrix *data = readData("data.txt"), *m, *n;
-  showMatrix(data);
+  Matrix *data = readData("circuit.txt"), *m, *n;
+  // showMatrix(data);
   setSolutionMatrix(data, &m, &n);
   // showMatrix(m);
   // showMatrix(n);
-  guasPro(m, n);
+  guassPro(m, n);
   // showMatrix(m);
   showMatrix(n);
   deleteMatrix(data);
@@ -67,7 +67,7 @@ void showMatrix(Matrix *m) {
   }
   for (int i = 0; i < m->rows; i++) {
     for (int j = 0; j < m->columns; j++) {
-      printf("%3.2f\t", m->datas[i][j]);
+      printf("%6.5f\t", m->datas[i][j]);
     }
     puts("");
   }
@@ -132,7 +132,7 @@ void gaussBackward(Matrix *a, Matrix *b) {
   }
 }
 
-void guasPro(Matrix *a, Matrix *b) {
+void guassPro(Matrix *a, Matrix *b) {
   gaussForward(a, b);
   gaussBackward(a, b);
 }
@@ -191,7 +191,7 @@ void setSolutionMatrix(Matrix *datas, Matrix **l, Matrix **r) {
       }
     }
   }
-  showMatrix(temp);
+  // showMatrix(temp);
   *l = createMatrix(dataSize, dataSize);
   *r = createMatrix(dataSize, 1);
   (*r)->datas[pIndex][0] = 5;
