@@ -1,5 +1,5 @@
 // 循环链表
-// 36题用
+// 36, 40题用
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -33,17 +33,39 @@ void splitList(CircleNode *head, CircleNode **r) {
   fast->next = *r;
 }
 
-int main(int argc, char const *argv[]) {
-  CircleNode *node, *m;
-  for (size_t i = 0; i < 10; i++) {
-    insertAtEnd(&node, i);
+int getJosephuPosition(int n, int m) {
+  CircleNode *head = newCircleNode(0), *temp = head, *temp2;
+  for (int i = 1; i < n; i++) {
+    insertAtEnd(&head, i);
   }
+  showNodes(head);
+  for (int i = n; i > 0; i--) {
+    for (int j = 0; j < m - 2; j++) {
+      temp = temp->next;
+    }
+    temp2 = temp->next;
+    temp->next = temp->next->next;
+    temp2->next = temp2;
+    delete(&temp2);
+  }
+  showNodes(temp);
+  // delete(&temp);
+  return temp->data;
+}
+
+int main(int argc, char const *argv[]) {
+  // CircleNode *node, *m;
+  // for (size_t i = 0; i < 10; i++) {
+  //   insertAtEnd(&node, i);
+  // }
+  // // showNodes(node);
+  // splitList(node, &m);
   // showNodes(node);
-  splitList(node, &m);
-  showNodes(node);
-  showNodes(m);
-  delete(&node);
-  delete(&m);
+  // showNodes(m);
+  // delete(&node);
+  // delete(&m);
+
+  getJosephuPosition(40, 18);
   return 0;
 }
 
@@ -65,7 +87,7 @@ void delete(CircleNode **head) {
     free(temp);
     temp = temp2;
   }
-  free(*head);
+  free(temp);
   *head = NULL;
 }
 
@@ -134,6 +156,7 @@ void deleteLast(CircleNode **head) {
   temp2->next = *head;
   free(temp);
 }
+
 void showNodes(CircleNode *head) {
   CircleNode *temp = head;
   int count = 0;

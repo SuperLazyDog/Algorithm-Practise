@@ -1,5 +1,5 @@
 // 单向链表
-// 32, 37~题用
+// 32, 37, 38, 41, 42, 43题用
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -93,14 +93,80 @@ int isPalindrome(ListNode *head) {
   return result;
 }
 
+void reverseFirstKNodes(ListNode **head, int k) {
+  int count = 0;
+  if (!head) {
+    return;
+  }
+  ListNode *temp = *head, *temp2 = *head, *temp3, *next = NULL;
+  while (temp && count < k) {
+    count++;
+    temp = temp->next;
+  }
+  if (count < k) { // 数量不足k, 比如空链表
+    return;
+  }
+  // 反转temp2到temp内所有元素
+  while (temp2 != temp) {
+    temp3 = temp2->next;
+    temp2->next = next;
+    next = temp2;
+    temp2 = temp3;
+  }
+  temp2 = next; // 新开头
+  (*head)->next = temp;
+  *head = temp2;
+}
+
+void addElementAtLast(ListNode **head, int data) {
+  ListNode *temp = *head, *temp2, *newNode = createList(data);
+  if (!*head) {
+    *head = newNode;
+    return;
+  }
+  while (temp) {
+    temp2 = temp;
+    temp = temp->next;
+  }
+  temp2->next = newNode;
+}
+void SplitWithEven(ListNode **head) {
+  ListNode *even=NULL, *odd=NULL, *temp = *head, *temp2;
+  if (!*head) {
+    return;
+  }
+  while (temp) {
+    if (temp->data % 2) { // 奇
+      addElementAtLast(&odd, temp->data);
+    } else { // 偶
+      addElementAtLast(&even, temp->data);
+    }
+    temp = temp->next;
+  }
+  temp = *head;
+  deleteList(&temp);
+  temp = even;
+  while (temp) {
+    temp2 = temp;
+    temp = temp->next;
+  }
+  temp2->next = odd;
+  *head = even;
+}
 int main(int argc, char const *argv[]) {
   ListNode *p = NULL;
-  int data[] = {1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1};
+  // int data[] = {1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1};
   for (int i = 0; i < 11; i++) {
-    addElement(&p, data[i], 100);
+    // addElement(&p, data[i], 100);
+    // addElementAtLast(&p, data[i]);
+    addElementAtLast(&p, rand()%100);
   }
   listLength(p);
-  printf("palindrome: %d\n", isPalindrome(p));
+  SplitWithEven(&p);
+  listLength(p);
+  // reverseFirstKNodes(&p, 1);
+  // listLength(p);
+  // printf("palindrome: %d\n", isPalindrome(p));
   // swapListEle(&p, NULL);
   // listLength(p);
   deleteList(&p);
