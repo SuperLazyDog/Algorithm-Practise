@@ -7,7 +7,6 @@ typedef struct listStack {
   int data;
   struct listStack *next;
 } ListStack;
-
 ListStack *createStack();
 void deleteStack(ListStack **head);
 void push(ListStack **head, int data);
@@ -30,11 +29,8 @@ int main(int argc, char const *argv[]) {
   return 0;
 }
 
-ListStack *createStack(int data) {
-  ListStack *new = (ListStack *)malloc(sizeof(ListStack));
-  new->data = data;
-  new->next = NULL;
-  return new;
+ListStack *createStack() {
+  return NULL;
 }
 
 void deleteStack(ListStack **head) {
@@ -48,7 +44,8 @@ void deleteStack(ListStack **head) {
 }
 
 void push(ListStack **head, int data) {
-  ListStack *new = createStack(data);
+  ListStack *new = (ListStack *)malloc(sizeof(ListStack));
+  new->data = data;
   new->next = *head;
   *head = new;
 }
@@ -79,8 +76,7 @@ void showStackHelper(ListStack *head, int count) {
   if (!head) {
     return;
   }
-  showStackHelper(head->next, ++count);
-  count--;
+  showStackHelper(head->next, count + 1);
   printf("stack[%d]: %d\n", count, head->data);
 }
 
