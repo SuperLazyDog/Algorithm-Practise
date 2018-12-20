@@ -5,7 +5,7 @@
 struct arrayStack {
   int top;
   int capacity;
-  int *array;
+  int *datas;
 };
 
 struct arrayStack *createStack(int capacity);
@@ -22,6 +22,7 @@ int main(int argc, char const *argv[]) {
   for (size_t i = 0; i < 10; i++) {
     push(&stack, i);
   }
+  showStack(stack);
   for (size_t i = 0; i < 3; i++) {
     pop(&stack);
   }
@@ -34,14 +35,17 @@ struct arrayStack *createStack(int capacity) {
   struct arrayStack *new = (struct arrayStack *)malloc(sizeof(struct arrayStack));
   new->top = -1;
   new->capacity = capacity;
-  new->array = (int *)malloc(sizeof(int) * new->capacity);
+  new->datas = (int *)malloc(sizeof(int) * new->capacity);
   return new;
 }
 
 void deleteStack(struct arrayStack **p) {
+  if (!p || !*p) {
+    return;
+  }
   if (*p) {
-    if((*p)->array) {
-      free((*p)->array);
+    if ((*p)->datas) {
+      free((*p)->datas);
     }
     free(*p);
   }
@@ -52,32 +56,31 @@ int isEmptyStack(struct arrayStack *p) {
   return p->top < 0;
 }
 int isFullStack(struct arrayStack *p) {
-  return p->top == p->capacity - 1;
+  return p->top + 1 == p->capacity;
 }
+
 void push(struct arrayStack **s, int data) {
   if (!*s) {
     *s = createStack(1024);
   }
-  if ((*s)->top >= (*s)->capacity - 1) { // 满了
+  if ((*s)->top >= (*s)->capacity - 1) {
     puts("满栈");
     return;
   }
-  (*s)->array[++(*s)->top] = data;
+  (*s)->datas[++(*s)->top] = data;
 }
 
 int pop(struct arrayStack **s) {
-  if (!*s) {
+  if (!s || !*s || (*s)->top < 0) {
+    puts("栈不存在或空栈");
     return -1;
   }
-  if ((*s)->top < 0) {
-    puts("空栈");
-    return -2;
-  }
-  return (*s)->array[(*s)->top--];
+  return (*s)->datas[(*s)->top--];
 }
 
 void showStack(struct arrayStack *s) {
-  for (int i = 0; i < s->top; i++) {
-    printf("stack[%d]: %d\n", i, s->array[i]);
+  for (int i = 0; i <= s->top; i++) {
+    printf("s[%d]: %d\n", i, s->datas[i]);
   }
+  puts("");puts("");
 }
