@@ -66,3 +66,54 @@ void convertToSuffix(char str[]) {
   puts("");
   deleteStack(&stack);
 }
+
+// 20181225 再做一遍
+// 对应+-*/ ()
+// A+B => AB+
+// A*B+C = AB*C+
+// A*(B+C) = ABC+*
+double getPriority(char c) {
+  switch (c) {
+    case '+':
+    case '-':
+      return 1.0;
+    case '*':
+    case '/':
+      return 2.0;
+    case '('
+      return 3.0;
+    case ')'
+      return 3.1;
+    default:
+      return -1;
+  }
+}
+void convertToSuffix(char str[]) {
+  ListStack *stack = createStack();
+  int i = 0;
+  while (str[i]) {
+    double priority = getPriority(str[i]);
+    if (priority == -1) {
+      printf("%c", str[i]);
+    } else if (priority == 3.1) { // )
+      char temp = pop(&stack);
+      while (getPriority(temp) != 3.0) {
+        printf("%c", temp);
+        temp = pop(&stack);
+      }
+    } else {
+      char temp = top(stack);
+      while (!isEmptyStack(stack) && getPriority(temp) >= priority && getPriority(temp) != 3.0) {
+        printf("%c", temp);
+        temp = pop(&stack);
+      }
+      push(&stack, str[i]);
+    }
+    i++;
+  }
+  while (!isEmptyStack(stack)) {
+    printf("%c", pop(&stack));
+  }
+  puts("");
+  deleteStack(&stack);
+}

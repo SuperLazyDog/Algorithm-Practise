@@ -109,3 +109,60 @@ int caculateExpression(char str[]) {
   deleteStack(&operator);
   return result;
 }
+
+// 20181225 再做一遍
+int caculate(int a, int b, char c) {
+  switch (c) {
+    case '+':
+      return a + b;
+    case '-':
+      return a - b;
+    case '*':
+      return a * b;
+    case '/':
+      return a / b;
+    default:
+      return -1;
+  }
+}
+
+int caculateExpression(char str[]) {
+  ListStack *operants = createStack(), *operators = createStack();
+  int i = 0, result;
+  while (str[i]) {
+    double priority = getPriority(str[i]);
+    if (priority < 0) { // 数字
+      push(&operants, str[i]-'0');
+    } else if (priority == 3.1) { // )
+      // 把 ( 前的全都算掉, 删除遇到的第一个 (
+      char temp = pop(&operators);
+      int sPriority = getPriority(temp);
+      while (sPriority != 3.0) {
+        int b = pop(&operants), a = pop(&operants);
+        push(&operants, caculate(a, b, temp));
+        temp = pop(&operators);
+        sPriority = getPriority(temp);
+      }
+    } else { // +-*/ (
+      // 把 回溯到最开始或 ( 之间比当前符号优先度高或相等的算完
+      char temp = top(operators);
+      int sPriority = getPriority(temp);
+      while (!isEmptyStack(operators) && sPriority != 3.0 && sPriority >= priority) {
+        int b = pop(&operants), a = pop(&operants);
+        push(&operants, caculate(a, b, temp));
+        temp = top(operators);
+        sPriority = getPriority(temp);
+      }
+      push(&operators, str[i]);
+    }
+    i++;
+  }
+  while (!isEmptyStack(operators)) {
+    int b = pop(&operants), a = pop(&operants);
+    push(&operants, caculate(a, b, pop(&operators)));
+  }
+  result = pop(&operants);
+  deleteStack(&operants);
+  deleteStack(&operators);
+  return result;
+}

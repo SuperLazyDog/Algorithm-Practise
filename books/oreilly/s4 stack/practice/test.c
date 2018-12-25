@@ -102,22 +102,22 @@ int caculateSuffix(char str[]) {
   int i = 0, priority, result;
   while (str[i]) {
     priority = getPriority(str[i]);
-    if (priority < 0) { // 数字
+    if (priority == -1) {
       push(&stack, str[i]-'0');
     } else {
       int b = pop(&stack), a = pop(&stack);
       switch (str[i]) {
         case '+':
-          push(&stack, a+b);
+          push(&stack, a + b);
           break;
         case '-':
-          push(&stack, a-b);
+          push(&stack, a - b);
           break;
         case '*':
-          push(&stack, a*b);
+          push(&stack, a * b);
           break;
         case '/':
-          push(&stack, a/b);
+          push(&stack, a / b);
           break;
       }
     }
@@ -128,111 +128,84 @@ int caculateSuffix(char str[]) {
   return result;
 }
 
+int caculate(int a, int b, char c) {
+  switch (c) {
+    case '+':
+      return a + b;
+    case '-':
+      return a - b;
+    case '*':
+      return a * b;
+    case '/':
+      return a / b;
+    default:
+      return -1;
+  }
+}
+
 int caculateExpression(char str[]) {
-  ListStack *operant = createStack(), *operator = createStack();
-  for (int i = 0; str[i]; i++) {
+  ListStack *operants = createStack(), *operators = createStack();
+  int i = 0, result;
+  while (str[i]) {
     double priority = getPriority(str[i]);
     if (priority < 0) { // 数字
-      push(&operant, str[i]-'0');
-    } else if (priority == 3.1) { // 右括号
-      char temp = pop(&operator);
-      double sPriority = getPriority(temp);
-      while (sPriority < 3) { // pop到左括号
-        int b = pop(&operant), a = pop(&operant);
-        switch (temp) {
-          case '+':
-            push(&operant, a + b);
-            break;
-          case '-':
-            push(&operant, a - b);
-            break;
-          case '*':
-            push(&operant, a * b);
-            break;
-          case '/':
-            push(&operant, a / b);
-            break;
-        }
-        temp = pop(&operator);
+      push(&operants, str[i]-'0');
+    } else if (priority == 3.1) { // )
+      // 把 ( 前的全都算掉, 删除遇到的第一个 (
+      char temp = pop(&operators);
+      int sPriority = getPriority(temp);
+      while (sPriority != 3.0) {
+        int b = pop(&operants), a = pop(&operants);
+        push(&operants, caculate(a, b, temp));
+        temp = pop(&operators);
         sPriority = getPriority(temp);
       }
-    } else if (priority == 3) { // 左括号
-      push(&operator, str[i]);
-    } else { // 运算符
-      // 计算所有优先度大于等于当前运算符的
-      // puts("运算符");
-      if (!isEmptyStack(operator)) {
-        char temp = top(operator);
-        double sPriority = getPriority(temp);
-        while (sPriority >= priority && sPriority != 3) {
-          temp = pop(&operator);
-          int b = pop(&operant), a = pop(&operant);
-          switch (temp) {
-            case '+':
-              push(&operant, a + b);
-              break;
-            case '-':
-              push(&operant, a - b);
-              break;
-            case '*':
-              push(&operant, a * b);
-              break;
-            case '/':
-              push(&operant, a / b);
-              break;
-          }
-          temp = top(operator);
-          sPriority = getPriority(temp);
-        }
+    } else { // +-*/ (
+      // 把 回溯到最开始或 ( 之间比当前符号优先度高或相等的算完
+      char temp = top(operators);
+      int sPriority = getPriority(temp);
+      while (!isEmptyStack(operators) && sPriority != 3.0 && sPriority >= priority) {
+        int b = pop(&operants), a = pop(&operants);
+        push(&operants, caculate(a, b, temp));
+        temp = top(operators);
+        sPriority = getPriority(temp);
       }
-      push(&operator, str[i]);
+      push(&operators, str[i]);
     }
+    i++;
   }
-  while (!isEmptyStack(operator)) {
-    char temp = pop(&operator);
-    int b = pop(&operant), a = pop(&operant);
-    switch (temp) {
-      case '+':
-        push(&operant, a + b);
-        break;
-      case '-':
-        push(&operant, a - b);
-        break;
-      case '*':
-        push(&operant, a * b);
-        break;
-      case '/':
-        push(&operant, a / b);
-        break;
-    }
+  while (!isEmptyStack(operators)) {
+    int b = pop(&operants), a = pop(&operants);
+    push(&operants, caculate(a, b, pop(&operators)));
   }
-  int result = top(operant);
-  deleteStack(&operant);
-  deleteStack(&operator);
+  result = pop(&operants);
+  deleteStack(&operants);
+  deleteStack(&operators);
   return result;
 }
 
 int main(int argc, char const *argv[]) {
   // printf("isBalanced: %d\n", isBalanced("(1+2*(3)-[12312ghv+sa/{1*2}])*{3+[5-(6*6)]}"));
 
+  char s[128], ss[128];
+  do {
+    printf("inputs: ");
+    scanf("%s", s);
+    convertToSuffix(s);
+    printf("suffix: ");
+    scanf("%s", ss);
+    printf("result: %d\n", caculateSuffix(ss));
+    printf("不转换为后缀表达式的result: %d\n", caculateExpression(s));
+    puts("");
+  } while(strcmp("quit", s));
+
   // char s[128];
   // do {
   //   printf("inputs: ");
   //   scanf("%s", s);
-  //   convertToSuffix(s);
-  //   // printf("suffix: ");
-  //   scanf("%s", s);
-  //   printf("result: %d\n", caculateSuffix(s));
+  //   printf("result: %d\n", caculateExpression(s));
   //   puts("");
   // } while(strcmp("quit", s));
-
-  char s[128];
-  do {
-    printf("inputs: ");
-    scanf("%s", s);
-    printf("result: %d\n", caculateExpression(s));
-    puts("");
-  } while(strcmp("quit", s));
   return 0;
 }
 

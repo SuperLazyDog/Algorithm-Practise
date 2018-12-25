@@ -57,3 +57,35 @@ int caculateSuffix(char str[]) {
   deleteStack(&stack);
   return result;
 }
+
+// 20181225 再做一遍
+int caculateSuffix(char str[]) {
+  ListStack *stack = createStack();
+  int i = 0, priority, result;
+  while (str[i]) {
+    priority = getPriority(str[i]);
+    if (priority == -1) {
+      push(&stack, str[i]-'0');
+    } else {
+      int b = pop(&stack), a = pop(&stack);
+      switch (str[i]) {
+        case '+':
+          push(&stack, a + b);
+          break;
+        case '-':
+          push(&stack, a - b);
+          break;
+        case '*':
+          push(&stack, a * b);
+          break;
+        case '/':
+          push(&stack, a / b);
+          break;
+      }
+    }
+    i++;
+  }
+  result = pop(&stack);
+  deleteStack(&stack);
+  return result;
+}
