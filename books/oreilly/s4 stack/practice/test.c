@@ -1,5 +1,5 @@
 // 链表实现栈, push/pop都是开头处进行
-// 1~题用
+// 1~4题用
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
