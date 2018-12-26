@@ -1,5 +1,6 @@
 // 链表实现栈, push/pop都是开头处进行
-// 5,6, 8~题用
+// 9直接在4_9.c
+// 5,6, 8, 10题用
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -94,17 +95,44 @@ ListStack *getAdvancedMinStack(ListStack *head) {
   return new;
 }
 
+// int isPalindrome(char str[]) {
+//   int i = 0, j = 0;
+//   while (str[j]) {
+//     j++;
+//   }
+//   j = j - 1;
+//   while (i <= j && str[i] == str[j]) {
+//     i++;
+//     j--;
+//   }
+//   return i <= j ? 0 : 1;
+// }
 int isPalindrome(char str[]) {
   int i = 0, j = 0;
-  while (str[j]) {
+  ListStack *s = createStack();
+  if (!str) {
+    return 0;
+  }
+  while (str[j]) { // 有效为 2k+1, 此处跳出循环则长度为2k
+    j++;
+    if (!str[j]) { // 跳过为 2k+2, 此处跳出循环则长度为2k+1
+      // 不用push, 此时元素是正中间的, 比较的时候用不上
+      i++; // 跳过正中间
+      break;
+    }
+    push(&s, str[i]);
+    i++;
     j++;
   }
-  j = j - 1;
-  while (i <= j && str[i] == str[j]) {
+  while (str[i] && str[i] == pop(&s)) {
     i++;
-    j--;
   }
-  return i <= j ? 0 : 1;
+  deleteStack(&s);
+  if (!str[i]) {
+    return 1;
+  } else {
+    return 0;
+  }
 }
 
 int main(int argc, char const *argv[]) {
@@ -122,19 +150,12 @@ int main(int argc, char const *argv[]) {
   // deleteStack(&temp);
 
 
-  // char str[128];
-  // do {
-  //   printf("str: ");
-  //   scanf("%s", str);
-  //   printf("isPalindrome: %d\n", isPalindrome(str));
-  // } while(strcmp(str, "quit"));
-  int a[10];
-  for (int i = 0; i < 11; i++) {
-    a[i] = i;
-  }
-  // for (int i = 0; i < 10; i++) {
-  //   printf("%d\n", a[i]);
-  // }
+  char str[128];
+  do {
+    printf("str: ");
+    scanf("%s", str);
+    printf("isPalindrome: %d\n", isPalindrome(str));
+  } while(strcmp(str, "quit"));
   return 0;
 }
 
