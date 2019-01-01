@@ -11,7 +11,7 @@
 // void deleteList(ListNode **p);
 
 // O(n)
-// 长度为n, 中间点为第 n/2+n%2 个
+// 长度为n, 中间点为第 n/2+n%2 个, 以0开始的索引为(n-1)/2
 ListNode *getMiddleNode(ListNode *head) {
   ListNode *temp = head;
   int count = 0;
