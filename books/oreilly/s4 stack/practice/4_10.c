@@ -12,6 +12,7 @@
 // int isEmptyStack(ListStack *head);
 // void showStack(ListStack *head);
 
+// TODO: 复习此处
 int isPalindrome(char str[]) {
   int i = 0, j = 0;
   ListStack *s = createStack();
