@@ -1,8 +1,10 @@
 // 链表实现栈, push/pop都是开头处进行
-// 10~题用
+// 14, 15在各自文件里
+// 11, 20题用
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <string.h>
 
 typedef struct listStack {
   int data;
@@ -59,14 +61,35 @@ void reverse(ListStack **s) {
   }
 }
 
-int main(int argc, char const *argv[]) {
-  ListStack *head = NULL;
-  for (int i = 0; i < 10; i++) {
-    push(&head, i);
+int canDo(char str[]) {
+  int length = 0;
+  for (int i = 0; str[i]; i++) {
+    if (str[i] == 'S') {
+      length++;
+    } else if (str[i] == 'X') {
+      length--;
+      if (length < 0) {
+        return 0;
+      }
+    }
   }
-  showStack2(head);
-  reverse(&head);
-  showStack2(head);
+  return 1;
+}
+
+int main(int argc, char const *argv[]) {
+  // ListStack *head = NULL;
+  // for (int i = 0; i < 10; i++) {
+  //   push(&head, i);
+  // }
+  // showStack2(head);
+  // reverse(&head);
+  // showStack2(head);
+  char str[128];
+  do {
+    printf("str: ");
+    scanf("%s", str);
+    printf("cando: %d\n", canDo(str));
+  } while(strcmp(str, "q"));
   return 0;
 }
 
