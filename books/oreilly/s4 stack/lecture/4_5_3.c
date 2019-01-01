@@ -14,6 +14,7 @@ int pop(ListStack **head);
 int top(ListStack *head);
 int isEmptyStack(ListStack *head);
 void showStack(ListStack *head);
+void showStack2(ListStack *head);
 
 int main(int argc, char const *argv[]) {
   ListStack *head = NULL;
@@ -82,5 +83,16 @@ void showStackHelper(ListStack *head, int count) {
 
 void showStack(ListStack *head) {
   showStackHelper(head, 0);
+  puts("");puts("");
+}
+
+void showStack2(ListStack *head) {
+  ListStack *temp = head;
+  int i = 0;
+  while (temp) {
+    printf("stack[%d]: %d\n", i, temp->data);
+    i++;
+    temp = temp->next;
+  }
   puts("");puts("");
 }
