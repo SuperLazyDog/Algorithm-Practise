@@ -1,6 +1,6 @@
 // 链表实现栈, push/pop都是开头处进行
-// 14, 15在各自文件里
-// 11, 20题用
+// 14, 15, 22在各自文件里
+// 11, 20, 23题用
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -76,6 +76,30 @@ int canDo(char str[]) {
   return 1;
 }
 
+int *getSpans(int a[], int n) {
+  ListStack *s = createStack();
+  int *result = (int *)malloc(sizeof(int)*n);
+  int p;
+  for (int i = 0; i < n; i++) {
+    while (!isEmptyStack(s)) {
+      if (a[i] > a[top(s)]) {
+        pop(&s);
+      } else {
+        break;
+      }
+    }
+    if (isEmptyStack(s)) {
+      p = -1;
+    } else {
+      p = top(s);
+    }
+    result[i] = i-p;
+    push(&s, i);
+  }
+  deleteStack(&s);
+  return result;
+}
+
 int main(int argc, char const *argv[]) {
   // ListStack *head = NULL;
   // for (int i = 0; i < 10; i++) {
@@ -84,12 +108,21 @@ int main(int argc, char const *argv[]) {
   // showStack2(head);
   // reverse(&head);
   // showStack2(head);
-  char str[128];
-  do {
-    printf("str: ");
-    scanf("%s", str);
-    printf("cando: %d\n", canDo(str));
-  } while(strcmp(str, "q"));
+
+
+  // char str[128];
+  // do {
+  //   printf("str: ");
+  //   scanf("%s", str);
+  //   printf("cando: %d\n", canDo(str));
+  // } while(strcmp(str, "q"));
+
+
+  int a[5] = {6, 3, 4, 5, 2}, *b;
+  b = getSpans(a, 5);
+  for (int i = 0; i < 5; i++) {
+    printf("b[%d]: %d\n", i, b[i]);
+  }
   return 0;
 }
 
