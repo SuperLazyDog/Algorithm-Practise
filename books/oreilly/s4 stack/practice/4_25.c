@@ -13,7 +13,8 @@
 typedef struct item {
   int i, h;
 } Item;
-// TODO: Review [再复习一遍]
+// TODO: Review [再复习一遍, 顺便理解书上写法]
+// http://algorithms.blog55.fc2.com/blog-entry-132.html
 int getLargestOblong(int a[], int n) {
   Item items[n], temp;
   int max = 0, current = -1, tempS;
