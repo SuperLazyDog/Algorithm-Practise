@@ -11,10 +11,10 @@ typedef struct aQ {
 
 ArrayQueue *createQueue(int size);
 void deleteQueue(ArrayQueue **q);
+int queueSize(ArrayQueue *q);
 void showQueue(ArrayQueue *q);
 int isEmptyQueue(ArrayQueue *q);
 int isFullQueue(ArrayQueue *q);
-int queueSize(ArrayQueue *q);
 void enQueue(ArrayQueue *q, int data);
 int deQueue(ArrayQueue *q);
 
@@ -66,6 +66,15 @@ void deleteQueue(ArrayQueue **q) {
   *q = NULL;
 }
 
+int queueSize(ArrayQueue *q) {
+  if (q->front <= q->rear) {
+    return q->rear - q->front + 1;
+  } else {
+    return q->capacity - (q->front - q->rear - 1);
+  }
+  // return (q->capacity-(q->front-q->rear-1)) % q->capacity; // 书上的, 有错误
+}
+
 void showQueue(ArrayQueue *q) {
   int i, j = 0, k;
   printf("q->capacity: %d, size: %d, front: %d, rear: %d\n", q->capacity, queueSize(q), q->front, q->rear);
@@ -88,15 +97,6 @@ int isEmptyQueue(ArrayQueue *q) {
 }
 int isFullQueue(ArrayQueue *q) {
   return (q->rear + 1) % q->capacity == q->front;
-}
-
-int queueSize(ArrayQueue *q) {
-  if (q->front <= q->rear) {
-    return q->rear - q->front + 1;
-  } else {
-    return q->capacity - (q->front - q->rear - 1);
-  }
-  // return (q->capacity-(q->front-q->rear-1)) % q->capacity; // 书上的, 有错误
 }
 
 void enQueue(ArrayQueue *q, int data) {
