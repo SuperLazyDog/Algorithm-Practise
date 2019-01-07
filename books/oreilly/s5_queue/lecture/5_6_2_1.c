@@ -67,6 +67,9 @@ void deleteQueue(ArrayQueue **q) {
 }
 
 int queueSize(ArrayQueue *q) {
+  if (q->front == -1) {
+    return 0;
+  }
   if (q->front <= q->rear) {
     return q->rear - q->front + 1;
   } else {
