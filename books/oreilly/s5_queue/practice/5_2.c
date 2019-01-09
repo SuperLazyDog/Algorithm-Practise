@@ -128,12 +128,12 @@ void deleteQueue(Queue **q) {
 
 void showQueue(Queue *q) {
   int j = 0;
-  if (q->s2) {
+  if (q->s2->head != -1) {
     for (int i = q->s2->head; i >= 0; i--) {
       printf("queue[%d]: %d\n", j++, q->s2->data[i]);
     }
   }
-  if (q->s1) {
+  if (q->s1->head != -1) {
     for (int i = 0; i <= q->s1->head; i++) {
       printf("queue[%d]: %d\n", j++, q->s1->data[i]);
     }
