@@ -4,6 +4,13 @@
 #include <math.h>
 
 #define LIMIT 0.00000000001
+// abOcOOdOOO
+//   O OO OOO
+//   111 abXcXdX
+//   102 abXcdXX
+//   012 abcXdXX
+//   021 abcXXdX
+//   003 abcdXXX
 typedef struct o {
   char num[4], exp[7];
   int t[4];
@@ -12,6 +19,7 @@ void solution(NE s, int n);
 double caculate(double a, double b, char type);
 double expCaculate(char str[7]);
 void showStandartExp(char str[7]);
+
 int main(int argc, char const *argv[]) {
   char str[4], over[] = "quit";
   do {
@@ -27,13 +35,6 @@ int main(int argc, char const *argv[]) {
 }
 
 void solution(NE s, int n) {
-  // abOcOOdOOO
-  //   O OO OOO
-  //   111 abXcXdX
-  //   102 abXcdXX
-  //   012 abcXdXX
-  //   021 abcXXdX
-  //   003 abcdXXX
   if (n >= 7) {
     char strs[5][8], temp[2];
     for (int i = 0; i < 5; i++) {
