@@ -29,33 +29,22 @@ void push(Stack *s, int data);
 int pop(Stack *s);
 
 int main(int argc, char const *argv[]) {
-  // DoubleArrayQueue *q = createQueue();
-  // for (size_t i = 0; i < 20; i++) {
-  //   enQueue(q, i);
-  // }
-  // showQueue(q);
-  // for (size_t i = 0; i < 10; i++) {
-  //   deQueue(q);
-  // }
-  // showQueue(q);
-  // for (size_t i = 0; i < 50; i++) {
-  //   enQueue(q, i*10);
-  // }
-  // showQueue(q);
-  // deleteQueue(&q);
+  DoubleArrayQueue *q = createQueue();
   Stack *s = createStack();
-  for (size_t i = 0; i < 20; i++) {
-    push(s, i);
-  }
-  showStack(s);
+
   for (size_t i = 0; i < 10; i++) {
-    pop(s);
+    enQueue(q, i);
   }
+  showQueue(q);
   showStack(s);
-  for (size_t i = 0; i < 5; i++) {
-    push(s, i+100);
+  int temp = deQueue(q);
+  while (q->front != -1) {
+    push(s, deQueue(q));
   }
+  push(s, temp);
+  showQueue(q);
   showStack(s);
+  deleteQueue(&q);
   deleteStack(&s);
   return 0;
 }
