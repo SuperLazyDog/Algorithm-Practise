@@ -50,24 +50,21 @@ a.right.generate(data: 7, side: :right)
 # a.left.show
 # a.right.show
 # -------------------------
-# 6-17
+# 6-20
 # -------------------------
-def are_structural_same?(node1, node2)
-  return true if node1.nil? && node2.nil?
-  return false if [node1, node2].compact.count < 2 || (node1.data != node2.data)
-  return are_structural_same?(node1.left, node2.left) && are_structural_same?(node1.right, node2.right)
+def print_paths(node, path)
+  return if node.nil?
+  if node.left.nil? && node.right.nil?
+    path.each do |i|
+      printf("\t%d", i.data)
+    end
+    printf("\n");
+    return
+  end
+  lpath = path + [node.left]
+  print_paths(node.left, lpath)
+  rpath = path + [node.right]
+  print_paths(node.right, rpath)
 end
 
-
-
-b = BinaryTree.new(1)
-b.generate(data: 2, side: :left)
-b.generate(data: 3, side: :right)
-b.left.generate(data: 4, side: :left)
-b.left.generate(data: 5, side: :right)
-b.right.generate(data: 6, side: :left)
-b.right.generate(data: 7, side: :right)
-b.right.right.generate(data: 9, side: :right)
-a.show
-b.show
-puts "are_structural_same? #{are_structural_same?(a, b)}"
+print_paths(a, [a])

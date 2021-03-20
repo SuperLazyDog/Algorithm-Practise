@@ -50,24 +50,25 @@ a.right.generate(data: 7, side: :right)
 # a.left.show
 # a.right.show
 # -------------------------
-# 6-17
+# 6-22
 # -------------------------
-def are_structural_same?(node1, node2)
-  return true if node1.nil? && node2.nil?
-  return false if [node1, node2].compact.count < 2 || (node1.data != node2.data)
-  return are_structural_same?(node1.left, node2.left) && are_structural_same?(node1.right, node2.right)
+# def get_sum(node)
+#   return 0 if node.nil?
+#   return node.data + get_sum(node.left) + get_sum(node.right)
+# end
+
+# 非递归
+def get_sum(node)
+  stack = []
+  sum = 0
+  while true
+    while !node.nil?
+      sum += node.data
+      stack.push node
+      node = node.left
+    end
+    return sum if stack.empty?
+    node = stack.pop.right
+  end
 end
-
-
-
-b = BinaryTree.new(1)
-b.generate(data: 2, side: :left)
-b.generate(data: 3, side: :right)
-b.left.generate(data: 4, side: :left)
-b.left.generate(data: 5, side: :right)
-b.right.generate(data: 6, side: :left)
-b.right.generate(data: 7, side: :right)
-b.right.right.generate(data: 9, side: :right)
-a.show
-b.show
-puts "are_structural_same? #{are_structural_same?(a, b)}"
+puts get_sum(a)
