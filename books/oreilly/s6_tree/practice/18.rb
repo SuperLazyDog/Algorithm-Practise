@@ -46,6 +46,8 @@ a.left.generate(data: 4, side: :left)
 a.left.generate(data: 5, side: :right)
 a.right.generate(data: 6, side: :left)
 a.right.generate(data: 7, side: :right)
+a.left.left.generate(data: 8, side: :left)
+a.left.left.generate(data: 9, side: :right)
 # a.show
 # a.left.show
 # a.right.show
@@ -63,5 +65,9 @@ def get_diameter(node)
   return 0 if node.nil? || (node.left.nil? && node.right.nil?)
   left_height = get_height(node.left)
   right_height = get_height(node.right)
-
+  left_diameter = get_diameter(node.left)
+  right_diameter = get_diameter(node.right)
+  return [left_diameter, right_diameter, left_height + right_height + 1].max
 end
+
+puts get_diameter(a).to_s

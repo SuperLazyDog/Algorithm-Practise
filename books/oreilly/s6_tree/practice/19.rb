@@ -52,7 +52,7 @@ a.right.generate(data: 7, side: :right)
 # -------------------------
 # 6-19
 # -------------------------
-def get_left_with_max_sum(node)
+def get_level_with_max_sum(node)
   return 0 if node.nil?
   queue = [node, nil]
   sums = []
@@ -77,4 +77,4 @@ def get_left_with_max_sum(node)
   return [level, sums.max]
 end
 
-puts get_left_with_max_sum(a).to_s
+puts get_level_with_max_sum(a).to_s

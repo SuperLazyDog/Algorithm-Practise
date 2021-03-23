@@ -27,7 +27,7 @@ class BinaryTree
           queue.push nil
         end
       else
-        printf "%d\t", cur.data
+        printf "%s\t", cur.data
         queue.push cur.left if !cur.left.nil?
         queue.push cur.right if !cur.right.nil?
       end
@@ -49,16 +49,29 @@ a.right.generate(data: 7, side: :right)
 # a.show
 # a.left.show
 # a.right.show
+
+#                 I
+#         L                I
+#                      L       L
 # -------------------------
-# 6-21
+# 6-33
 # -------------------------
-def has_path_with_sum?(node, sum)
-  return sum == 0 if node.nil?
-  sum -= node.data
-  return has_path_with_sum?(node.left, sum) || has_path_with_sum?(node.right, sum)
+
+def build_tree(elements)
+  return if elements.empty?
+  char  = elements.shift
+  node = BinaryTree.new(char)
+  if char == "I"
+    node.left = build_tree(elements)
+    node.right = build_tree(elements)
+  end
+  return node
 end
 
-puts has_path_with_sum?(a, 1)
-puts has_path_with_sum?(a, 7)
-puts has_path_with_sum?(a, 8)
-puts has_path_with_sum?(a, 9)
+str = "ILILL"
+elements = str.split('')
+tree = build_tree(elements.dup)
+tree.show
+puts tree.left.inspect
+puts tree.right.inspect
+puts elements.to_s

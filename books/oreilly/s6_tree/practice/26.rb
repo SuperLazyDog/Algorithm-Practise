@@ -50,15 +50,16 @@ a.right.generate(data: 7, side: :right)
 # a.left.show
 # a.right.show
 # -------------------------
-# 6-21
+# 6-26
 # -------------------------
-def has_path_with_sum?(node, sum)
-  return sum == 0 if node.nil?
-  sum -= node.data
-  return has_path_with_sum?(node.left, sum) || has_path_with_sum?(node.right, sum)
+# 最小祖先
+def get_least_common_ancestor(node, c1, c2)
+  return nil if node.nil?
+  return node if node == c1 || node == c2
+  left = get_least_common_ancestor(node.left, c1, c2)
+  right = get_least_common_ancestor(node.right, c1, c2)
+  return node if !left.nil? && !right.nil?
+  return left || right
 end
 
-puts has_path_with_sum?(a, 1)
-puts has_path_with_sum?(a, 7)
-puts has_path_with_sum?(a, 8)
-puts has_path_with_sum?(a, 9)
+puts get_least_common_ancestor(a, a.left.right, a.left.left).show

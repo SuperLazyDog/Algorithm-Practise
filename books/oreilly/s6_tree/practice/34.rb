@@ -1,9 +1,10 @@
 class BinaryTree
-  attr_accessor :right, :left, :data
+  attr_accessor :right, :left, :data, :next_sibling
   # attr_accessor :data
   def initialize(data = nil)
     @right = nil
     @left = nil
+    @next_sibling = nil
     @data = data
   end
 
@@ -27,7 +28,7 @@ class BinaryTree
           queue.push nil
         end
       else
-        printf "%d\t", cur.data
+        printf "%s\t", cur.data
         queue.push cur.left if !cur.left.nil?
         queue.push cur.right if !cur.right.nil?
       end
@@ -50,15 +51,36 @@ a.right.generate(data: 7, side: :right)
 # a.left.show
 # a.right.show
 # -------------------------
-# 6-21
+# 6-34
 # -------------------------
-def has_path_with_sum?(node, sum)
-  return sum == 0 if node.nil?
-  sum -= node.data
-  return has_path_with_sum?(node.left, sum) || has_path_with_sum?(node.right, sum)
+# def fill_next_sibling(node)
+#   return if node.nil?
+#   queue = [node, nil]
+#   while !queue.empty?
+#     cur = queue.shift
+#     if cur.nil?
+#       queue.push nil if !queue.empty?
+#     else
+#       cur.next_sibling = queue.first
+#       queue.push cur.left if !cur.left.nil?
+#       queue.push cur.right if !cur.right.nil?
+#     end
+#   end
+# end
+# 递归版
+def fill_next_sibling(node)
+  return if node.nil?
+  if !node.left.nil?
+    node.left.next_sibling = node.right
+  end
+  if !node.right.nil?
+    node.right.next_sibling = node.next_sibling&.left
+  end
+  fill_next_sibling(node.left)
+  fill_next_sibling(node.right)
 end
 
-puts has_path_with_sum?(a, 1)
-puts has_path_with_sum?(a, 7)
-puts has_path_with_sum?(a, 8)
-puts has_path_with_sum?(a, 9)
+fill_next_sibling(a)
+puts a.inspect
+puts a.left.inspect
+puts a.right.inspect

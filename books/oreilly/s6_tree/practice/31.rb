@@ -27,7 +27,7 @@ class BinaryTree
           queue.push nil
         end
       else
-        printf "%d\t", cur.data
+        printf "%s\t", cur.data
         queue.push cur.left if !cur.left.nil?
         queue.push cur.right if !cur.right.nil?
       end
@@ -50,15 +50,16 @@ a.right.generate(data: 7, side: :right)
 # a.left.show
 # a.right.show
 # -------------------------
-# 6-21
+# 6-31　垂直和
 # -------------------------
-def has_path_with_sum?(node, sum)
-  return sum == 0 if node.nil?
-  sum -= node.data
-  return has_path_with_sum?(node.left, sum) || has_path_with_sum?(node.right, sum)
+@sum = {}
+def vertical_sum(node, column)
+  return if node.nil?
+  @sum[column] = 0 if @sum[column].nil?
+  @sum[column] += node.data
+  vertical_sum(node.left, column-1)
+  vertical_sum(node.right, column+1)
 end
 
-puts has_path_with_sum?(a, 1)
-puts has_path_with_sum?(a, 7)
-puts has_path_with_sum?(a, 8)
-puts has_path_with_sum?(a, 9)
+vertical_sum(a, 0)
+puts @sum

@@ -50,15 +50,27 @@ a.right.generate(data: 7, side: :right)
 # a.left.show
 # a.right.show
 # -------------------------
-# 6-21
+# 6-25
 # -------------------------
-def has_path_with_sum?(node, sum)
-  return sum == 0 if node.nil?
-  sum -= node.data
-  return has_path_with_sum?(node.left, sum) || has_path_with_sum?(node.right, sum)
+def get_mirror(target, node)
+  return if node.nil?
+  target.data = node.data if target.data.nil?
+  target.left = BinaryTree.new(node.right.data) if !node.right.nil?
+  target.right = BinaryTree.new(node.left.data) if !node.left.nil?
+  get_mirror(target.right, node.left)
+  get_mirror(target.left, node.right)
 end
 
-puts has_path_with_sum?(a, 1)
-puts has_path_with_sum?(a, 7)
-puts has_path_with_sum?(a, 8)
-puts has_path_with_sum?(a, 9)
+
+def is_mirror?(node1, node2)
+  return true if node1.nil? && node2.nil?
+  return false if (node1.nil? && !node2.nil?) || (!node1.nil? && node2.nil?)
+  return node1.data == node2.data && is_mirror?(node1.left, node2.right) && is_mirror?(node1.right, node2.left)
+
+end
+t = BinaryTree.new
+get_mirror(t, a)
+t.show
+a.show
+puts is_mirror?(t, a)
+puts is_mirror?(t, t)
