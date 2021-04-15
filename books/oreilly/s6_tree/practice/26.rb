@@ -53,13 +53,29 @@ a.right.generate(data: 7, side: :right)
 # 6-26
 # -------------------------
 # 最小祖先
+# def get_least_common_ancestor(node, c1, c2)
+#   return nil if node.nil?
+#   return node if node == c1 || node == c2
+#   left = get_least_common_ancestor(node.left, c1, c2)
+#   right = get_least_common_ancestor(node.right, c1, c2)
+#   return node if !left.nil? && !right.nil?
+#   return left || right
+# end
+
+# 2021-4-16自己想的
+# 总结: 注意数据类型, c1, c2 是 node, 不是 数值
 def get_least_common_ancestor(node, c1, c2)
   return nil if node.nil?
-  return node if node == c1 || node == c2
+  return node if node.data == c1.data || node.data == c2.data
   left = get_least_common_ancestor(node.left, c1, c2)
   right = get_least_common_ancestor(node.right, c1, c2)
-  return node if !left.nil? && !right.nil?
-  return left || right
+  if !left.nil? && !right.nil?
+    return node
+  elsif left.nil? && right.nil?
+    return nil
+  else
+    return left.nil? ? right : left
+  end
 end
 
 puts get_least_common_ancestor(a, a.left.right, a.left.left).show
